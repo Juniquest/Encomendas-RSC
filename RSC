@@ -1,15 +1,9 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Calendar } from "@/components/ui/calendar";
-import { SignaturePad } from "@/components/ui/signature-pad";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import React, { useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
-import { useState } from "react";
+import "./App.css";
 
-export default function AppDashboard() {
-  const [selectedDate, setSelectedDate] = useState(new Date());
+function App() {
+  const [selectedDate, setSelectedDate] = useState("");
   const [signatureData, setSignatureData] = useState("");
 
   const reportData = [
@@ -20,68 +14,58 @@ export default function AppDashboard() {
     { name: "May", orders: 75 },
   ];
 
+  const handleSignature = (e) => {
+    setSignatureData(e.target.value);
+  };
+
   return (
-    <div className="p-4 grid grid-cols-1 gap-4">
-      <Tabs defaultValue="dashboard">
-        <TabsList>
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="new-order">Nova Encomenda</TabsTrigger>
-          <TabsTrigger value="reports">Relatórios</TabsTrigger>
-        </TabsList>
+    <div className="App">
+      <div className="tabs">
+        <input type="radio" id="tab1" name="tab" defaultChecked />
+        <label htmlFor="tab1">Dashboard</label>
+        <input type="radio" id="tab2" name="tab" />
+        <label htmlFor="tab2">Nova Encomenda</label>
+        <input type="radio" id="tab3" name="tab" />
+        <label htmlFor="tab3">Relatórios</label>
 
-        <TabsContent value="dashboard">
-          <Card>
-            <CardContent className="p-6 text-center">
-              <h2 className="text-2xl font-bold mb-2">Bem-vindo ao App de Encomendas</h2>
-              <p className="text-gray-500">Gerencie suas entregas e recebimentos facilmente.</p>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <div className="tab-content" id="content1">
+          <h2>Bem-vindo ao App de Encomendas</h2>
+          <p>Gerencie suas entregas e recebimentos facilmente.</p>
+        </div>
 
-        <TabsContent value="new-order">
-          <Card>
-            <CardContent className="p-6 grid gap-4">
-              <Input placeholder="Nome do Contato" />
-              <Input placeholder="Telefone" />
-              <Input placeholder="CPF" />
-              <div>
-                <p className="mb-2 font-semibold">Data de Recebimento</p>
-                <Calendar selected={selectedDate} onSelect={setSelectedDate} />
-              </div>
-              <div>
-                <p className="mb-2 font-semibold">Data e Hora de Entrega</p>
-                <Input type="datetime-local" />
-              </div>
-              <Textarea placeholder="Observações do Produto" />
-              <div>
-                <p className="mb-2 font-semibold">Foto do Produto</p>
-                <Input type="file" accept="image/*" capture />
-              </div>
-              <div>
-                <p className="mb-2 font-semibold">Assinatura</p>
-                <SignaturePad onChange={setSignatureData} />
-              </div>
-              <Button className="mt-4">Salvar Encomenda</Button>
-            </CardContent>
-          </Card>
-        </TabsContent>
+        <div className="tab-content" id="content2">
+          <h3>Nova Encomenda</h3>
+          <form className="order-form">
+            <input type="text" placeholder="Nome do Contato" />
+            <input type="tel" placeholder="Telefone" />
+            <input type="text" placeholder="CPF" />
+            <label>Data de Recebimento:</label>
+            <input type="date" onChange={(e) => setSelectedDate(e.target.value)} />
+            <label>Data e Hora de Entrega:</label>
+            <input type="datetime-local" />
+            <textarea placeholder="Observações do Produto"></textarea>
+            <label>Foto do Produto:</label>
+            <input type="file" accept="image/*" capture />
+            <label>Assinatura:</label>
+            <textarea placeholder="Assinatura Digital" value={signatureData} onChange={handleSignature}></textarea>
+            <button type="submit">Salvar Encomenda</button>
+          </form>
+        </div>
 
-        <TabsContent value="reports">
-          <Card>
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-4">Relatórios de Encomendas</h3>
-              <ResponsiveContainer width="100%" height={300}>
-                <BarChart data={reportData}>
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="orders" fill="#4F46E5" />
-                </BarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        <div className="tab-content" id="content3">
+          <h3>Relatórios de Encomendas</h3>
+          <ResponsiveContainer width="100%" height={300}>
+            <BarChart data={reportData}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Bar dataKey="orders" fill="#4F46E5" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
     </div>
   );
 }
+
+export default App;
