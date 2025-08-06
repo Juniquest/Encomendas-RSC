@@ -1,0 +1,87 @@
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Calendar } from "@/components/ui/calendar";
+import { SignaturePad } from "@/components/ui/signature-pad";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { useState } from "react";
+
+export default function AppDashboard() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [signatureData, setSignatureData] = useState("");
+
+  const reportData = [
+    { name: "Jan", orders: 30 },
+    { name: "Feb", orders: 45 },
+    { name: "Mar", orders: 50 },
+    { name: "Apr", orders: 60 },
+    { name: "May", orders: 75 },
+  ];
+
+  return (
+    <div className="p-4 grid grid-cols-1 gap-4">
+      <Tabs defaultValue="dashboard">
+        <TabsList>
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+          <TabsTrigger value="new-order">Nova Encomenda</TabsTrigger>
+          <TabsTrigger value="reports">Relatórios</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="dashboard">
+          <Card>
+            <CardContent className="p-6 text-center">
+              <h2 className="text-2xl font-bold mb-2">Bem-vindo ao App de Encomendas</h2>
+              <p className="text-gray-500">Gerencie suas entregas e recebimentos facilmente.</p>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="new-order">
+          <Card>
+            <CardContent className="p-6 grid gap-4">
+              <Input placeholder="Nome do Contato" />
+              <Input placeholder="Telefone" />
+              <Input placeholder="CPF" />
+              <div>
+                <p className="mb-2 font-semibold">Data de Recebimento</p>
+                <Calendar selected={selectedDate} onSelect={setSelectedDate} />
+              </div>
+              <div>
+                <p className="mb-2 font-semibold">Data e Hora de Entrega</p>
+                <Input type="datetime-local" />
+              </div>
+              <Textarea placeholder="Observações do Produto" />
+              <div>
+                <p className="mb-2 font-semibold">Foto do Produto</p>
+                <Input type="file" accept="image/*" capture />
+              </div>
+              <div>
+                <p className="mb-2 font-semibold">Assinatura</p>
+                <SignaturePad onChange={setSignatureData} />
+              </div>
+              <Button className="mt-4">Salvar Encomenda</Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="reports">
+          <Card>
+            <CardContent className="p-6">
+              <h3 className="text-xl font-semibold mb-4">Relatórios de Encomendas</h3>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={reportData}>
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="orders" fill="#4F46E5" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+    </div>
+  );
+}
